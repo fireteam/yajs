@@ -33,3 +33,6 @@ unbundle:
 
 wheel: bundle
 	python setup.py bdist_wheel
+
+upload: wheel
+	devpi upload --from-dir dist --only-latest
