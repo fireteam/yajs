@@ -21,7 +21,7 @@ vendor/yajl:
 
 vendor/yajl/build/yajl-$(YAJL_VERSION): vendor/yajl
 	cd vendor/yajl; ./configure
-	cd vendor/yajl; make
+	cd vendor/yajl; make distro
 
 jsonstream/$(YAJL_DST_LIBNAME): vendor/yajl/build/yajl-$(YAJL_VERSION)
 	cp $(YAJL_BUILD_FOLDER)/lib/$(YAJL_SRC_LIBNAME) jsonstream/$(YAJL_DST_LIBNAME)
