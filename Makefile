@@ -6,7 +6,7 @@ ifeq ($(UNAME_S),Darwin)
 	YAJL_SRC_LIBNAME=libyajl.$(YAJL_VERSION).dylib
 	YAJL_DST_LIBNAME=libyajl.dylib
 else
-	YAJL_SRC_LIBNAME=libyajl.$(YAJL_VERSION).so
+	YAJL_SRC_LIBNAME=libyajl.so.$(YAJL_VERSION)
 	YAJL_DST_LIBNAME=libyajl.so
 endif
 
