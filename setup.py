@@ -1,9 +1,17 @@
 # -*- coding: utf-8 -*-
 import os
 from setuptools import setup
+from setuptools.dist import Distribution
+
 
 with open(os.path.join(os.path.dirname(__file__), 'README')) as f:
     doc = f.read()
+
+
+class BinaryDistribution(Distribution):
+
+    def is_pure(self):
+        return False
 
 
 setup(
@@ -24,4 +32,5 @@ setup(
     ],
     packages=['jsonstream'],
     include_package_data=True,
+    distclass=BinaryDistribution,
 )

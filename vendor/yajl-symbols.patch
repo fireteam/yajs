@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c0611a2..708e51b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,7 +52,7 @@ ELSE (WIN32)
+     INCLUDE(CheckCCompilerFlag)
+     CHECK_C_COMPILER_FLAG(-fvisibility=hidden HAVE_GCC_VISIBILITY)
+     IF(HAVE_GCC_VISIBILITY)
+-      SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
++      # SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
+     ENDIF(HAVE_GCC_VISIBILITY)
+   ENDIF(CMAKE_COMPILER_IS_GNUCC)
+   SET(CMAKE_C_FLAGS

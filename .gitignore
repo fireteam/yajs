@@ -8,4 +8,4 @@ build
 dist
 .DS_Store
 .tox
-vendor
+vendor/yajl
