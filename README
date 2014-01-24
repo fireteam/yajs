@@ -6,8 +6,9 @@ json-stream
 
 Examples:
 
-    >>> from jsonstream import tokenize_string
-    >>> for token in tokenize_string('[1, 2, 3]'):
+    >>> from cStringIO import StringIO
+    >>> from jsonstream import tokenize
+    >>> for token in tokenize(StringIO('[1, 2, 3]')):
     ...     print token
     ... 
     ('start_array', None)
