@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
-"""
-JSON Stream
-~~~~~~~~~~~
-
-JSON stream is a simple package that provides a wrapper to the YAJL
-JSON lexer functions that allow tokenization of streams of JSON data
-without having to buffer up the whole data.
-"""
+import os
 from setuptools import setup
+
+with open(os.path.dirname(__file__), 'README') as f:
+    doc = f.read()
 
 
 setup(
@@ -18,7 +14,7 @@ setup(
     author='Fireteam Ltd.',
     author_email='armin@fireteam.net',
     description='A small wrapper around YAJL\'s lexer',
-    long_description=__doc__,
+    long_description=doc,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',

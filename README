@@ -1,0 +1,17 @@
+json-stream
+
+   json-stream is a simple package that provides a wrapper to the YAJL
+   JSON lexer functions that allow tokenization of streams of JSON data
+   without having to buffer up the whole data.
+
+Examples:
+
+    >>> from jsonstream import tokenize_string
+    >>> for token in tokenize_string('[1, 2, 3]'):
+    ...     print token
+    ... 
+    ('start_array', None)
+    ('value', 1)
+    ('value', 2)
+    ('value', 3)
+    ('end_array', None)
