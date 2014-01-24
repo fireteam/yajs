@@ -1,0 +1,11 @@
+*.so
+*.dylib
+*.pyc
+*.pyo
+*.egg-info
+*.egg
+build
+dist
+.DS_Store
+.tox
+vendor
