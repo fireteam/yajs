@@ -73,14 +73,16 @@ def _ll_tokenize(chunk_iter, allow_comments):
             elif tok == yajl_tok_string_with_escapes:
                 lib.yajl_string_decode(decode_buffer,
                                        out_buffer[0], out_len[0])
-                print '@@@', repr(lib.yajl_buf_data(decode_buffer)[0])
+                #print '@@@', repr(lib.yajl_buf_data(decode_buffer)[0])
                 value = ffi.string(lib.yajl_buf_data(decode_buffer),
                                    lib.yajl_buf_len(decode_buffer))
                 lib.yajl_buf_clear(decode_buffer)
                 tok = yajl_tok_string
             elif tok in tokens_want_value:
-                print '###', ffi.string(out_buffer[0], out_len[0])
+                #print '###', ffi.string(out_buffer[0], out_len[0])
+                print out_buffer[0], out_len[0],
                 value = ffi.string(out_buffer[0], out_len[0])
+                print value
             else:
                 value = None
             yield tok, value
