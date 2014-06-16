@@ -1,7 +1,7 @@
-import ctypes
+#import ctypes
 from cStringIO import StringIO as BytesIO
 
-from jsonstream.yajl import lib
+from jsonstream.yajl import lib, ffi
 
 
 yajl_tok_bool, \
@@ -37,54 +37,53 @@ token_value_converters = {
 }
 
 
-yajl_alloc_func_buffer = ctypes.c_void_p * 4
-
-
 def _ll_tokenize(chunk_iter, allow_comments):
     """Tokenizes data from an input stream."""
-    alloc_funcs = yajl_alloc_func_buffer()
-    lib.yajl_set_default_alloc_funcs(ctypes.byref(alloc_funcs))
+    alloc_funcs = ffi.new('yajl_alloc_funcs *')
+    lib.yajl_set_default_alloc_funcs(alloc_funcs)
 
-    lexer = lib.yajl_lex_alloc(ctypes.byref(alloc_funcs), allow_comments, False)
-    decode_buffer = lib.yajl_buf_alloc(ctypes.byref(alloc_funcs))
+    lexer = ffi.gc(
+        lib.yajl_lex_alloc(alloc_funcs, allow_comments, False),
+        lib.yajl_lex_free,
+    )
+    decode_buffer = ffi.gc(
+        lib.yajl_buf_alloc(alloc_funcs),
+        lib.yajl_buf_free,
+    )
 
-    try:
-        out_buffer = ctypes.c_char_p()
-        out_buffer_ref = ctypes.byref(out_buffer)
-        out_len = ctypes.c_size_t()
-        out_len_ref = ctypes.byref(out_len)
+    out_buffer = ffi.new('unsigned char **')
+    out_len = ffi.new('size_t *')
 
-        for chunk in chunk_iter:
-            chunk_len = len(chunk)
-            offset = ctypes.c_size_t(0)
-            offset_ref = ctypes.byref(offset)
+    for chunk in chunk_iter:
+        chunk_len = len(chunk)
+        offset = ffi.new('size_t *', 0)
 
-            while 1:
-                tok = lib.yajl_lex_lex(lexer, chunk, chunk_len,
-                                   offset_ref,
-                                   out_buffer_ref,
-                                   out_len_ref)
-                if tok == yajl_tok_eof:
-                    break
-                elif tok == yajl_tok_error:
-                    raise ValueError('Invalid JSON')
-                elif tok == yajl_tok_comment:
-                    continue
-                elif tok == yajl_tok_string_with_escapes:
-                    lib.yajl_string_decode(decode_buffer,
-                                       out_buffer, out_len.value)
-                    value = ctypes.string_at(lib.yajl_buf_data(decode_buffer),
-                                             lib.yajl_buf_len(decode_buffer))
-                    lib.yajl_buf_clear(decode_buffer)
-                    tok = yajl_tok_string
-                elif tok in tokens_want_value:
-                    value = ctypes.string_at(out_buffer, out_len.value)
-                else:
-                    value = None
-                yield tok, value
-    finally:
-        lib.yajl_lex_free(lexer)
-        lib.yajl_buf_free(decode_buffer)
+        while True:
+            tok = lib.yajl_lex_lex(lexer, chunk, chunk_len,
+                                   offset,
+                                   out_buffer,
+                                   out_len)
+
+            if tok == yajl_tok_eof:
+                break
+            elif tok == yajl_tok_error:
+                raise ValueError('Invalid JSON')
+            elif tok == yajl_tok_comment:
+                continue
+            elif tok == yajl_tok_string_with_escapes:
+                lib.yajl_string_decode(decode_buffer,
+                                       out_buffer[0], out_len[0])
+                print '@@@', repr(lib.yajl_buf_data(decode_buffer)[0])
+                value = ffi.string(lib.yajl_buf_data(decode_buffer),
+                                   lib.yajl_buf_len(decode_buffer))
+                lib.yajl_buf_clear(decode_buffer)
+                tok = yajl_tok_string
+            elif tok in tokens_want_value:
+                print '###', ffi.string(out_buffer[0], out_len[0])
+                value = ffi.string(out_buffer[0], out_len[0])
+            else:
+                value = None
+            yield tok, value
 
 
 def tokenize(f, allow_comments=False, buffer_size=8 * 4096):

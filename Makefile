@@ -36,3 +36,7 @@ wheel: bundle
 
 upload: wheel
 	devpi upload --from-dir dist --only-latest
+
+test:
+	rm -rf __pycache__ jsonstream/__pycache__
+	py.test

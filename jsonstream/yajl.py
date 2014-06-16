@@ -36,6 +36,13 @@ size_t yajl_buf_len(yajl_buf buf);
 void yajl_buf_truncate(yajl_buf buf, size_t len);
 """)
 
+# yajl_gen.h
+ffi.cdef("""
+typedef void (*yajl_print_t)(void * ctx,
+                             const char * str,
+                             size_t len);
+""")
+
 # yajl_encode.h (internal)
 ffi.cdef("""
 void yajl_string_encode(const yajl_print_t printer,
