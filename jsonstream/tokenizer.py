@@ -1,7 +1,7 @@
 import ctypes
 from cStringIO import StringIO as BytesIO
 
-from jsonstream.lib import yajl
+from jsonstream.yajl import lib
 
 
 yajl_tok_bool, \
@@ -39,52 +39,14 @@ token_value_converters = {
 
 yajl_alloc_func_buffer = ctypes.c_void_p * 4
 
-yajl_lex_alloc = yajl.yajl_lex_alloc
-yajl_lex_alloc.argtypes = (ctypes.c_void_p, ctypes.c_uint, ctypes.c_uint)
-yajl_lex_alloc.restype = ctypes.c_void_p
-
-yajl_lex_free = yajl.yajl_lex_free
-yajl_lex_free.argtypes = (ctypes.c_void_p,)
-
-yajl_lex_lex = yajl.yajl_lex_lex
-yajl_lex_lex.argtypes = (ctypes.c_void_p, ctypes.c_char_p,
-                         ctypes.c_size_t, ctypes.POINTER(ctypes.c_size_t),
-                         ctypes.POINTER(ctypes.c_char_p),
-                         ctypes.POINTER(ctypes.c_size_t))
-
-yajl_set_default_alloc_funcs = yajl.yajl_set_default_alloc_funcs
-yajl_set_default_alloc_funcs.argtypes = (ctypes.c_void_p,)
-
-yajl_buf_alloc = yajl.yajl_buf_alloc
-yajl_buf_alloc.argtypes = (ctypes.c_void_p,)
-yajl_buf_alloc.restype = ctypes.c_void_p
-
-yajl_buf_free = yajl.yajl_buf_free
-yajl_buf_free.argtypes = (ctypes.c_void_p,)
-
-yajl_buf_data = yajl.yajl_buf_data
-yajl_buf_data.restype = ctypes.c_char_p
-yajl_buf_data.argtypes = (ctypes.c_void_p,)
-
-yajl_buf_len = yajl.yajl_buf_len
-yajl_buf_len.restype = ctypes.c_size_t
-yajl_buf_len.argtypes = (ctypes.c_void_p,)
-
-yajl_buf_clear = yajl.yajl_buf_clear
-yajl_buf_clear.argtypes = (ctypes.c_void_p,)
-
-yajl_string_decode = yajl.yajl_string_decode
-yajl_string_decode.argtypes = (ctypes.c_void_p, ctypes.c_char_p,
-                               ctypes.c_size_t)
-
 
 def _ll_tokenize(chunk_iter, allow_comments):
     """Tokenizes data from an input stream."""
     alloc_funcs = yajl_alloc_func_buffer()
-    yajl_set_default_alloc_funcs(ctypes.byref(alloc_funcs))
+    lib.yajl_set_default_alloc_funcs(ctypes.byref(alloc_funcs))
 
-    lexer = yajl_lex_alloc(ctypes.byref(alloc_funcs), allow_comments, False)
-    decode_buffer = yajl_buf_alloc(ctypes.byref(alloc_funcs))
+    lexer = lib.yajl_lex_alloc(ctypes.byref(alloc_funcs), allow_comments, False)
+    decode_buffer = lib.yajl_buf_alloc(ctypes.byref(alloc_funcs))
 
     try:
         out_buffer = ctypes.c_char_p()
@@ -98,7 +60,7 @@ def _ll_tokenize(chunk_iter, allow_comments):
             offset_ref = ctypes.byref(offset)
 
             while 1:
-                tok = yajl_lex_lex(lexer, chunk, chunk_len,
+                tok = lib.yajl_lex_lex(lexer, chunk, chunk_len,
                                    offset_ref,
                                    out_buffer_ref,
                                    out_len_ref)
@@ -109,11 +71,11 @@ def _ll_tokenize(chunk_iter, allow_comments):
                 elif tok == yajl_tok_comment:
                     continue
                 elif tok == yajl_tok_string_with_escapes:
-                    yajl_string_decode(decode_buffer,
+                    lib.yajl_string_decode(decode_buffer,
                                        out_buffer, out_len.value)
-                    value = ctypes.string_at(yajl_buf_data(decode_buffer),
-                                             yajl_buf_len(decode_buffer))
-                    yajl_buf_clear(decode_buffer)
+                    value = ctypes.string_at(lib.yajl_buf_data(decode_buffer),
+                                             lib.yajl_buf_len(decode_buffer))
+                    lib.yajl_buf_clear(decode_buffer)
                     tok = yajl_tok_string
                 elif tok in tokens_want_value:
                     value = ctypes.string_at(out_buffer, out_len.value)
@@ -121,8 +83,8 @@ def _ll_tokenize(chunk_iter, allow_comments):
                     value = None
                 yield tok, value
     finally:
-        yajl_lex_free(lexer)
-        yajl_buf_free(decode_buffer)
+        lib.yajl_lex_free(lexer)
+        lib.yajl_buf_free(decode_buffer)
 
 
 def tokenize(f, allow_comments=False, buffer_size=8 * 4096):

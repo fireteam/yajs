@@ -13,6 +13,8 @@ class BinaryDistribution(Distribution):
     def is_pure(self):
         return False
 
+from jsonstream import yajl
+
 
 setup(
     name='json-stream',
@@ -30,7 +32,11 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
     ],
+    zip_safe=False,
+    install_requires=['cffi==0.8'],
     packages=['jsonstream'],
     include_package_data=True,
     distclass=BinaryDistribution,
+    ext_package='yajl',
+    #ext_modules=[yajl.lib.verifier.get_extension()]
 )
