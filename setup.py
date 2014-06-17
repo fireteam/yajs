@@ -16,7 +16,7 @@ class BinaryDistribution(Distribution):
 
 setup(
     name='json-stream',
-    version='1.0',
+    version='1.0.1',
     url='http://fireteam.net/',
     license='BSD',
     author='Fireteam Ltd.',
