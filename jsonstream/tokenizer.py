@@ -93,12 +93,13 @@ def _ll_tokenize(chunk_iter, allow_comments):
         out_len_ref = ctypes.byref(out_len)
 
         for chunk in chunk_iter:
+            chunk_p = ctypes.c_char_p(chunk)
             chunk_len = len(chunk)
             offset = ctypes.c_size_t(0)
             offset_ref = ctypes.byref(offset)
 
             while 1:
-                tok = yajl_lex_lex(lexer, chunk, chunk_len,
+                tok = yajl_lex_lex(lexer, chunk_p, chunk_len,
                                    offset_ref,
                                    out_buffer_ref,
                                    out_len_ref)
