@@ -17,7 +17,7 @@ class BinaryDistribution(Distribution):
 setup(
     name='json-stream',
     version='1.0.1',
-    url='http://fireteam.net/',
+    url='https://github.com/fireteam/python-json-stream',
     license='BSD',
     author='Fireteam Ltd.',
     author_email='info@fireteam.net',
