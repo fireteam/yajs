@@ -1,13 +1,13 @@
-json-stream
+yajs
 
-   json-stream is a simple package that provides a wrapper to the YAJL
-   JSON lexer functions that allow tokenization of streams of JSON data
+   yajs is a simple package that provides a wrapper to the YAJL JSON
+   lexer functions that allow tokenization of streams of JSON data
    without having to buffer up the whole data.
 
 Examples:
 
     >>> from cStringIO import StringIO
-    >>> from jsonstream import tokenize
+    >>> from yajs import tokenize
     >>> for token in tokenize(StringIO('[1, 2, 3]')):
     ...     print token
     ... 
