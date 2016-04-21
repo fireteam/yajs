@@ -23,13 +23,13 @@ vendor/yajl/build/yajl-$(YAJL_VERSION): vendor/yajl
 	cd vendor/yajl; ./configure
 	cd vendor/yajl; make distro
 
-jsonstream/$(YAJL_DST_LIBNAME): vendor/yajl/build/yajl-$(YAJL_VERSION)
-	cp $(YAJL_BUILD_FOLDER)/lib/$(YAJL_SRC_LIBNAME) jsonstream/$(YAJL_DST_LIBNAME)
+yajs/$(YAJL_DST_LIBNAME): vendor/yajl/build/yajl-$(YAJL_VERSION)
+	cp $(YAJL_BUILD_FOLDER)/lib/$(YAJL_SRC_LIBNAME) yajs/$(YAJL_DST_LIBNAME)
 
-bundle: jsonstream/$(YAJL_DST_LIBNAME)
+bundle: yajs/$(YAJL_DST_LIBNAME)
 
 unbundle:
-	rm -f jsonstream/$(YAJL_DST_LIBNAME)
+	rm -f yajs/$(YAJL_DST_LIBNAME)
 
 wheel: bundle
 	python setup.py bdist_wheel
@@ -38,5 +38,5 @@ upload: wheel
 	devpi upload --from-dir dist --only-latest
 
 test:
-	rm -rf __pycache__ jsonstream/__pycache__
+	rm -rf __pycache__ yajs/__pycache__
 	py.test

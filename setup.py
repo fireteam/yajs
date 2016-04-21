@@ -15,9 +15,9 @@ class BinaryDistribution(Distribution):
 
 
 setup(
-    name='json-stream',
+    name='yajs',
     version='1.0.1',
-    url='https://github.com/fireteam/python-json-stream',
+    url='https://github.com/fireteam/yajs',
     license='BSD',
     author='Fireteam Ltd.',
     author_email='info@fireteam.net',
@@ -30,7 +30,7 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
     ],
-    packages=['jsonstream'],
+    packages=['yajs'],
     include_package_data=True,
     distclass=BinaryDistribution,
 )
