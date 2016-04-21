@@ -16,7 +16,7 @@ class BinaryDistribution(Distribution):
 
 setup(
     name='yajs',
-    version='1.0.1',
+    version='1.0.2',
     url='https://github.com/fireteam/yajs',
     license='BSD',
     author='Fireteam Ltd.',
