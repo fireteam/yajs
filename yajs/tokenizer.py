@@ -1,7 +1,7 @@
 import ctypes
 from cStringIO import StringIO as BytesIO
 
-from jsonstream.lib import yajl
+from yajs.lib import yajl
 
 
 yajl_tok_bool, \

@@ -1,4 +1,4 @@
-from jsonstream import tokenize_string
+from yajs import tokenize_string
 
 
 def test_simple():
