@@ -20,7 +20,7 @@ setup(
     url='http://fireteam.net/',
     license='BSD',
     author='Fireteam Ltd.',
-    author_email='armin@fireteam.net',
+    author_email='info@fireteam.net',
     description='A small wrapper around YAJL\'s lexer',
     long_description=doc,
     classifiers=[
